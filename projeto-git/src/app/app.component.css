@@ -1,0 +1,22 @@
+.navbar {
+    background-color: firebrick;
+    cursor: pointer;
+    height: 10vh;
+}
+
+.btn-main {
+    background-color: firebrick;
+    border-color: red;
+    color: white;
+    cursor: pointer;
+    font-size: 3vh;
+}
+
+.container {
+    margin-top: 40px
+}
+
+.jumbotron {
+    margin: 0;
+    min-height: 90vh;
+}
