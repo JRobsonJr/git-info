@@ -1,19 +1,28 @@
 from flask import Flask, jsonify, abort, make_response, request
 from flask_cors import CORS
+from git import Repo
 
 app = Flask(__name__)
 
 CORS(app)
 
 projects = [ {
-    "name": "P1",
-    "url": "https://github.com/JRobsonJr/p1",
-    "commits": 30,
+    "name": "ProjetoP2",
+    "url": "https://github.com/marianabianca/projetop2",
+    "path": "C:/Users/jrobs/Documents/CO/ProjetoP2 - Grupo de Rosbon/.git",
     "project_id": 0
 }]
 
-id_atual = 1
+current_id = 1
 
+def get_commit_number(path):
+    repo = Repo(path)
+    head = repo.heads[0]
+    commit = head.commit
+    commit_number = commit.count()
+    return commit_number
+
+print(get_commit_number("C:/Users/jrobs/Documents/CO/ProjetoP2 - Grupo de Rosbon/.git"))
 @app.route('/project', methods=['GET'])
 def get_projects():
     return jsonify(projects)
@@ -26,13 +35,13 @@ def get_project(project_id):
     return jsonify(project[0])
 
 @app.route('/project', methods=['POST'])
-def criar_project():
-    global id_atual
+def add_project():
+    global current_id
     if not request.json:
         abort(400)
     project = request.get_json()
-    project["project_id"] = id_atual
-    id_atual += 1
+    project["project_id"] = current_id
+    current_id += 1
     projects.append(project)
     return jsonify(project), 201
 
