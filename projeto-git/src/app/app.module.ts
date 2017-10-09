@@ -1,4 +1,4 @@
-import { ProjetoService } from './projeto/projeto.service';
+import { ProjectDataService } from './project/project-data.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -7,15 +7,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { RegistrarProjetoComponent } from './registrar-projeto/registrar-projeto.component';
-import { ListarProjetosComponent } from './listar-projetos/listar-projetos.component';
+import { ProjectListComponent } from './project-list/project-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    RegistrarProjetoComponent,
-    ListarProjetosComponent
+    ProjectListComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +21,7 @@ import { ListarProjetosComponent } from './listar-projetos/listar-projetos.compo
     HttpClientModule,
     FormsModule
   ],
-  providers: [ProjetoService],
+  providers: [ProjectDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

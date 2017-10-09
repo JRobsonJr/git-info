@@ -1,0 +1,15 @@
+<div class="container" *ngIf="projects.length > 0">
+  <div class="card-columns">
+    <div class="card" *ngFor="let project of projects">
+      <h3 class="card-header text-center">{{ project.name }}</h3>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <b>Url:</b> {{ project.url }}
+        </li>
+        <li class="list-group-item">
+          <b>Commits:</b> {{ project.commits }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

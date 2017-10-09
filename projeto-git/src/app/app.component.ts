@@ -1,4 +1,4 @@
-import { Projeto } from './projeto/projeto';
+import { Project } from './project/project.model';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
@@ -13,8 +13,8 @@ export class AppComponent implements OnInit {
   constructor(private http: HttpClient) {}
   
   ngOnInit() {
-    this.http.get<Projeto>('http://localhost:5000/projetos/0').subscribe(data => {
-      console.log(data.nome);
+    this.http.get<Project>('http://localhost:5000/projects/0').subscribe(data => {
+      console.log(data.name);
       console.log(data.url);
       console.log(data.commits);
     });    
