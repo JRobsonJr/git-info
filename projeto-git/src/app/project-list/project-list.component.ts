@@ -9,7 +9,7 @@ import { ProjectDataService } from './../project/project-data.service';
   styleUrls: ['./project-list.component.css']
 })
 export class ProjectListComponent implements OnInit {
-  
+
   projects: Project[] = [];
 
   constructor(private projectService: ProjectDataService) {

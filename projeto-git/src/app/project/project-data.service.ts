@@ -8,10 +8,8 @@ export class ProjectDataService implements OnInit {
 
   // static criouNovoProject = new EventEmitter<Project>();
 
-  ngOnInit() {}
-
   private projects: Project[] = [];
-  
+
   addProject(project: Project) {
     this.projects.push(project);
   }
@@ -19,4 +17,6 @@ export class ProjectDataService implements OnInit {
   getProjects() {
     return this.projects;
   }
+
+  ngOnInit() {}
 }

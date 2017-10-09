@@ -22,7 +22,6 @@ def get_commit_number(path):
     commit_number = commit.count()
     return commit_number
 
-print(get_commit_number("C:/Users/jrobs/Documents/CO/ProjetoP2 - Grupo de Rosbon/.git"))
 @app.route('/project', methods=['GET'])
 def get_projects():
     return jsonify(projects)
