@@ -6,11 +6,11 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active" (click)="currentTab = 'home'">
-                <a class="nav-link" routerLink="/">Home</a>
+            <li routerLinkActive="active">
+                <a class="nav-link" routerLink="">Home</a>
             </li>
-            <li class="nav-item active" (click)="currentTab = 'listar'">
-                <a class="nav-link" routerLink="/project">List</a>
+            <li routerLinkActive="active">
+                <a class="nav-link" routerLink="/projects">List</a>
             </li>
         </ul>
     </div>

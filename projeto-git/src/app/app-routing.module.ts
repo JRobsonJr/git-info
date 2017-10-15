@@ -1,16 +1,20 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ProjectListComponent } from './project-list/project-list.component';
 import { HomeComponent } from './home/home.component';
+import { ProjectListComponent } from './project-list/project-list.component';
+import { ProjectDetailComponent } from './project-detail/project-detail.component';
+import { ProjectNotFoundComponent } from './project-not-found/project-not-found.component';
 
-const routes: Routes = [
-  { path: 'project', component: ProjectListComponent },
-  { path: '', component: HomeComponent }
+const appRoutes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'projects', component: ProjectListComponent },
+  { path: 'notFound', component: ProjectNotFoundComponent },
+  { path: 'project/:id', component: ProjectDetailComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(appRoutes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
