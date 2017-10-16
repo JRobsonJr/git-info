@@ -6,11 +6,10 @@ import { Project } from './project.model';
 @Injectable()
 export class ProjectDataService implements OnInit {
 
-  // static criouNovoProject = new EventEmitter<Project>();
-  testingProject = new Project('Aaa', 'aaa', 0);
-  testingProject2 = new Project('Bbb', 'aaa', 1);
-  
-  private projects: Project[] = [this.testingProject, this.testingProject2];
+  mockProject1 = new Project('Projeto de P2', 'git.com/projetop2', 0);
+  mockProject2 = new Project('Projeto de SI', 'git.com/projetoSI', 1);
+
+  private projects: Project[] = [this.mockProject1, this.mockProject2];
 
   getProjects() {
     return this.projects;
@@ -19,7 +18,7 @@ export class ProjectDataService implements OnInit {
   getProject(id: number) {
     let projects = this.getProjects();
     for (let project of projects) {
-      if (project.id == id) {
+      if (project.id === id) {
         return project;
       }
     }

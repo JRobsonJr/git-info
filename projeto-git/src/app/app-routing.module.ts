@@ -7,10 +7,11 @@ import { ProjectDetailComponent } from './project-detail/project-detail.componen
 import { ProjectNotFoundComponent } from './project-not-found/project-not-found.component';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
   { path: 'projects', component: ProjectListComponent },
   { path: 'notFound', component: ProjectNotFoundComponent },
-  { path: 'project/:id', component: ProjectDetailComponent }
+  { path: 'project/:id', component: ProjectDetailComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({

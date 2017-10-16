@@ -1,7 +1,6 @@
 .navbar {
     background-color: firebrick;
-    cursor: pointer;
-    height: 10vh;
+    cursor: pointer
 }
 
 .btn-main {
