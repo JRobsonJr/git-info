@@ -1,5 +1,5 @@
-<div class="container">
-    <h5>Detalhes do Projeto {{ project?.name }}:</h5>
-    <p>Id = {{ project?.id }}</p>
-    <p>Commits = {{ project?.commits }}</p>
+<div class="container" *ngIf="project != null">
+    <h5>Detalhes de {{ project.name }}:</h5>
+    <p>Id = {{ project.id }}</p>
+    <p>Commits = {{ project.commits }}</p>
 </div>

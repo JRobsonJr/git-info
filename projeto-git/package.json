@@ -29,6 +29,7 @@
     "jquery": "^3.2.1",
     "mongodb": "^2.2.33",
     "ngx-bootstrap": "^1.9.3",
+    "nodegit": "^0.20.3",
     "popper.js": "^1.12.5",
     "rxjs": "^5.4.2",
     "zone.js": "^0.8.14"
