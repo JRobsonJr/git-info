@@ -3,7 +3,7 @@
     <a class="list-group-item list-group-item-action"
     *ngFor="let project of projects"
     [routerLink]="['/project', project.id]">
-      {{ project.name }}
+      {{ project.name }} {{ project.id }}
     </a>
   </div>
 </div>

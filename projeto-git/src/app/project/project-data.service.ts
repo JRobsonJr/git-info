@@ -1,31 +1,36 @@
 import { Injectable, EventEmitter, OnInit } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
+import 'rxjs/add/operator/map';
 
 import { Project } from './project.model';
 
 @Injectable()
 export class ProjectDataService implements OnInit {
+  private projects: Project[] = [];
+  result: any;
 
-  mockProject1 = new Project('Projeto de P2', 'git.com/projetop2', 0);
-  mockProject2 = new Project('Projeto de SI', 'git.com/projetoSI', 1);
+  constructor(private http: Http) { }
 
-  private projects: Project[] = [this.mockProject1, this.mockProject2];
+  getProjectsApi() {
+    return this.http.get("/api/projects")
+      .map(result => this.result = result.json().data as Project[]);
+  }
 
-  getProjects() {
-    return this.projects;
+  updateProjects() {
+    this.getProjectsApi().subscribe(resp => {
+      this.projects = resp;
+    });
   }
 
   getProject(id: number) {
-    let projects = this.getProjects();
-    for (let project of projects) {
-      if (project.id === id) {
+    this.updateProjects();
+    for (let project of this.projects) {
+      if (project.id == id) {
         return project;
       }
     }
     return null;
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() { }
 }

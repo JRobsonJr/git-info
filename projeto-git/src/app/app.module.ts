@@ -2,6 +2,7 @@ import { ProjectDataService } from './project/project-data.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -22,6 +23,7 @@ import { ProjectNotFoundComponent } from './project-not-found/project-not-found.
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpModule,
     HttpClientModule,
     FormsModule
   ],

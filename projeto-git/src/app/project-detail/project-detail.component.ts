@@ -34,5 +34,4 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-
 }
