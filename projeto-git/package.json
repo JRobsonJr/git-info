@@ -28,6 +28,7 @@
     "express": "^4.16.2",
     "jquery": "^3.2.1",
     "mongodb": "^2.2.33",
+    "mongoose": "^4.12.4",
     "ngx-bootstrap": "^1.9.3",
     "nodegit": "^0.20.3",
     "popper.js": "^1.12.5",

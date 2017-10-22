@@ -11,13 +11,13 @@ export class ProjectDataService implements OnInit {
 
   constructor(private http: Http) { }
 
-  getProjectsApi() {
+  getProjects() {
     return this.http.get("/api/projects")
       .map(result => this.result = result.json().data as Project[]);
   }
 
   updateProjects() {
-    this.getProjectsApi().subscribe(resp => {
+    this.getProjects().subscribe(resp => {
       this.projects = resp;
     });
   }
@@ -25,7 +25,7 @@ export class ProjectDataService implements OnInit {
   getProject(id: number) {
     this.updateProjects();
     for (let project of this.projects) {
-      if (project.id == id) {
+      if (project.id === id) {
         return project;
       }
     }

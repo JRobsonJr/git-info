@@ -2,11 +2,19 @@ const express = require('express');
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
-let NodeGit = require("nodegit");
+let info = require('./../info.js');
+let mongoose = require('mongoose');
+let Project = require('./../models/project');
 
-// Connect
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost:27017/git-projects', {
+    useMongoClient: true,
+});
+
 const connection = (closure) => {
-    return MongoClient.connect('mongodb://localhost:27017/git-projects', (err, db) => {
+    return mongoose.connect('mongodb://localhost:27017/git-projects', {
+        useMongoClient: true,
+    }, (err, db) => {
         if (err) return console.log(err);
 
         closure(db);
@@ -27,28 +35,43 @@ let response = {
     message: null
 };
 
-function getCommitNumber(project) {
-    let path = require("path").resolve("C:/Users/jrobs/Documents/CO/ProjetoP2 - Grupo de Rosbon/.git");
-    return NodeGit.Repository.open(path).then(repo => {
-        let walker = repo.createRevWalk(String);
-        walker.pushHead();
-        walker.getCommitsUntil(c => true).then(array => array.length);
+// router.get('/projects', (req, res) => {
+//     connection((db) => {
+//         db.collection('projects')
+//             .find()
+//             .toArray()
+//             .then((projects) => {
+//                 response.data = projects;
+//                 res.json(response);
+//             })
+//             .catch((err) => {
+//                 sendError(err, res);
+//             });
+//     });
+// });
+
+router.post('/projects', function (req, res) {
+    let project = new Project();
+    project.name = req.body.name;
+    project.id = req.body.id;
+    project.path = req.body.path;
+    
+    project.save(function (err) {
+        if (err)
+            res.send(err);
+
+        res.json({ message: 'Project created!' });
     });
-}
 
-function addCommitNumbers(projects) {
-    for (let project of projects) {
-        project["commits"] = getCommitNumber(project);
-    }
-}
+});            
 
-router.get('/projects', (req, res) => {
+router.post('/projects', (req, res) => {
     connection((db) => {
         db.collection('projects')
             .find()
             .toArray()
             .then((projects) => {
-                addCommitNumbers(projects);
+                info.addCommitNumbers(projects);
                 response.data = projects;
                 res.json(response);
             })
