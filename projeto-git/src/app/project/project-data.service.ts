@@ -12,7 +12,7 @@ export class ProjectDataService implements OnInit {
   constructor(private http: Http) { }
 
   getProjects() {
-    return this.http.get("/api/projects")
+    return this.http.get("api/projects")
       .map(result => this.result = result.json().data as Project[]);
   }
 

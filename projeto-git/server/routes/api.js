@@ -16,7 +16,6 @@ const connection = (closure) => {
         useMongoClient: true,
     }, (err, db) => {
         if (err) return console.log(err);
-
         closure(db);
     });
 };
@@ -50,25 +49,20 @@ router.post('/projects', function (req, res) {
     project.name = req.body.name;
     project.id = req.body.id;
     project.path = req.body.path;
-    gitInfo.getCommitNumber(project.path).then((result) => {
-        project.commits = result;
-        console.log("Success!", result); // "Stuff worked!"
-      }).catch(function(error) {
-        console.log("Failed!", error);
-      });
+    promise = gitInfo.getCommitNumber(project);
 
-    project.save((err) => {
-        if (err)
-            res.send(err);
-
-        res.json({ message: 'Project created!' });
+    Promise.all([promise]).then(() => {
+        project.save((err) => {
+            if (err) res.send(err);
+            
+            res.json({ message: 'Project created!' });
+        })
     });
 });
 
 router.get('/project/:id', (req, res) => {
     Project.find({ id: req.params.id }, (err, project) => {
-        if (err)
-            res.send(err);
+        if (err) res.send(err);
 
         res.json(project);
     });
@@ -78,7 +72,7 @@ router.put('/project/:id', (req, res) => {
     Project.findOneAndUpdate({ id: req.params.id }, { commits: 10 }, (err, project) => {
         if (err) res.send(err);
 
-        res.json({ message: "yeah!" });
+        res.json({ message: "Project updated!" });
     });
 });
 

@@ -1,18 +1,19 @@
 let NodeGit = require("nodegit");
+let Project = require('./models/project');
 
 module.exports = {
-    getCommitNumber(projectPath) {
-        let path = require("path").resolve(projectPath);
+    getCommitNumber(project) {
+        let globalCommits = 0;
+        let path = require("path").resolve(project.path);
+
         return NodeGit.Repository.open(path).then(repo => {
             let walker = repo.createRevWalk(String);
-            walker.pushHead();
-            walker.getCommitsUntil(c => true).then((array) => { return array.length });
+            walker.pushGlob('refs/heads/*');
+            return walker.getCommitsUntil(c => true)
+                .then((array) => {
+                    project.commits = array.length;
+                    console.log(project.commits);
+                }).catch((err) => console.log(err));
         });
-    }
-}
-
-function addCommitNumbers(projects) {
-    for (let project of projects) {
-        project["commits"] = getCommitNumber(project.projectPath);
     }
 }
