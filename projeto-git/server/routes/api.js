@@ -36,10 +36,11 @@ let response = {
 
 router.get('/projects', (req, res) => {
     Project.find((err, projects) => {
-        if (err)
+        if (err) {
             res.send(err);
-
-        res.json(projects);
+        }
+        response.data = projects;
+        res.json(response);
     });
 });
 
@@ -49,9 +50,8 @@ router.post('/projects', function (req, res) {
     project.name = req.body.name;
     project.id = req.body.id;
     project.path = req.body.path;
-    promise = gitInfo.getCommitNumber(project);
-
-    Promise.all([promise]).then(() => {
+    
+    gitInfo.getCommitNumber(project).then(() => {
         project.save((err) => {
             if (err) res.send(err);
             
@@ -64,12 +64,14 @@ router.get('/project/:id', (req, res) => {
     Project.find({ id: req.params.id }, (err, project) => {
         if (err) res.send(err);
 
-        res.json(project);
+        response.data = project;
+        res.json(response);
     });
 });
 
+// Editing
 router.put('/project/:id', (req, res) => {
-    Project.findOneAndUpdate({ id: req.params.id }, { commits: 10 }, (err, project) => {
+    Project.findOneAndUpdate({ id: req.params.id }, { commits: 1989 }, (err, project) => {
         if (err) res.send(err);
 
         res.json({ message: "Project updated!" });

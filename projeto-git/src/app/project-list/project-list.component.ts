@@ -11,6 +11,7 @@ import { ProjectDataService } from './../project/project-data.service';
 export class ProjectListComponent implements OnInit {
 
   projects: Project[] = [];
+  res: any;
 
   constructor(private projectService: ProjectDataService) {
   }

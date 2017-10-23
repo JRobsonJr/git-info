@@ -12,8 +12,8 @@ export class ProjectDataService implements OnInit {
   constructor(private http: Http) { }
 
   getProjects() {
-    return this.http.get("api/projects")
-      .map(result => this.result = result.json().data as Project[]);
+    return this.http.get("/api/projects")
+      .map(result => { return this.result = result.json().data as Project[] });
   }
 
   updateProjects() {
