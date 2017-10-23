@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
-let info = require('./../info.js');
+let gitInfo = require('./../git-info');
 let mongoose = require('mongoose');
 let Project = require('./../models/project');
 
@@ -35,49 +35,50 @@ let response = {
     message: null
 };
 
-// router.get('/projects', (req, res) => {
-//     connection((db) => {
-//         db.collection('projects')
-//             .find()
-//             .toArray()
-//             .then((projects) => {
-//                 response.data = projects;
-//                 res.json(response);
-//             })
-//             .catch((err) => {
-//                 sendError(err, res);
-//             });
-//     });
-// });
+router.get('/projects', (req, res) => {
+    Project.find((err, projects) => {
+        if (err)
+            res.send(err);
+
+        res.json(projects);
+    });
+});
 
 router.post('/projects', function (req, res) {
     let project = new Project();
+
     project.name = req.body.name;
     project.id = req.body.id;
     project.path = req.body.path;
-    
-    project.save(function (err) {
+    gitInfo.getCommitNumber(project.path).then((result) => {
+        project.commits = result;
+        console.log("Success!", result); // "Stuff worked!"
+      }).catch(function(error) {
+        console.log("Failed!", error);
+      });
+
+    project.save((err) => {
         if (err)
             res.send(err);
 
         res.json({ message: 'Project created!' });
     });
+});
 
-});            
+router.get('/project/:id', (req, res) => {
+    Project.find({ id: req.params.id }, (err, project) => {
+        if (err)
+            res.send(err);
 
-router.post('/projects', (req, res) => {
-    connection((db) => {
-        db.collection('projects')
-            .find()
-            .toArray()
-            .then((projects) => {
-                info.addCommitNumbers(projects);
-                response.data = projects;
-                res.json(response);
-            })
-            .catch((err) => {
-                sendError(err, res);
-            });
+        res.json(project);
+    });
+});
+
+router.put('/project/:id', (req, res) => {
+    Project.findOneAndUpdate({ id: req.params.id }, { commits: 10 }, (err, project) => {
+        if (err) res.send(err);
+
+        res.json({ message: "yeah!" });
     });
 });
 
