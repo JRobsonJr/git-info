@@ -71,10 +71,26 @@ router.get('/project/:id', (req, res) => {
 
 // Editing
 router.put('/project/:id', (req, res) => {
-    Project.findOneAndUpdate({ id: req.params.id }, { commits: 1989 }, (err, project) => {
+    Project.find({ id: req.params.id }, (err, project) => {
         if (err) res.send(err);
 
-        res.json({ message: "Project updated!" });
+        gitInfo.getCommitInfo("C:/Users/jrobs/Documents/Projects/pomodoro/.git").then((array) => {
+            response.data = array;
+            res.json(response);
+        });
+    });
+    // Project.findOneAndUpdate({ id: req.params.id }, { commits: 1989 }, (err, project) => {
+    //     if (err) res.send(err);
+
+    //     res.json({ message: "Project updated!" });
+    // });
+});
+
+router.delete('/projects', (req, res) => {
+    Project.remove({}, (err) => {
+        if (err) res.send(err);
+
+        res.json({ message: 'Successfully deleted' });
     });
 });
 

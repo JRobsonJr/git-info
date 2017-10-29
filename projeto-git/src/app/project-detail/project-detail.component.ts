@@ -16,9 +16,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   project: Project;
 
-  constructor(private route: ActivatedRoute, private router: Router, private projectService: ProjectDataService) { }
-
-  ngOnInit() {
+  constructor(private route: ActivatedRoute, private router: Router, private projectService: ProjectDataService) {
     this.subscription = this.route.params.subscribe(
       (params: any) => {
         this.id = params['id'];
@@ -29,6 +27,9 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  ngOnInit() {
   }
 
   ngOnDestroy() {
