@@ -27,12 +27,15 @@
     "cors": "^2.8.4",
     "express": "^4.16.2",
     "jquery": "^3.2.1",
+    "moment": "^2.19.1",
     "mongodb": "^2.2.33",
     "mongoose": "^4.12.4",
     "ngx-bootstrap": "^1.9.3",
     "nodegit": "^0.20.3",
+    "plotly": "^1.0.6",
     "popper.js": "^1.12.5",
     "rxjs": "^5.4.2",
+    "underscore": "^1.8.3",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {

@@ -5,6 +5,7 @@ const ObjectID = require('mongodb').ObjectID;
 let gitInfo = require('./../git-info');
 let mongoose = require('mongoose');
 let Project = require('./../models/project');
+let plotly = require('./../plotly');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/git-projects', {
@@ -20,14 +21,12 @@ const connection = (closure) => {
     });
 };
 
-// Error handling
 const sendError = (err, res) => {
     response.status = 501;
     response.message = typeof err == 'object' ? err.message : err;
     res.status(501).json(response);
 };
 
-// Response handling
 let response = {
     status: 200,
     data: [],
@@ -36,9 +35,8 @@ let response = {
 
 router.get('/projects', (req, res) => {
     Project.find((err, projects) => {
-        if (err) {
-            res.send(err);
-        }
+        if (err) res.send(err);
+
         response.data = projects;
         res.json(response);
     });
@@ -50,18 +48,18 @@ router.post('/projects', function (req, res) {
     project.name = req.body.name;
     project.id = req.body.id;
     project.path = req.body.path;
-    
+
     gitInfo.getCommitNumber(project).then(() => {
         project.save((err) => {
             if (err) res.send(err);
-            
+
             res.json({ message: 'Project created!' });
-        })
-    });
+        });
+    }).catch((err) => console.log(err));
 });
 
 router.get('/project/:id', (req, res) => {
-    Project.find({ id: req.params.id }, (err, project) => {
+    Project.findOne({ id: req.params.id }, (err, project) => {
         if (err) res.send(err);
 
         response.data = project;
@@ -69,21 +67,22 @@ router.get('/project/:id', (req, res) => {
     });
 });
 
-// Editing
-router.put('/project/:id', (req, res) => {
-    Project.find({ id: req.params.id }, (err, project) => {
+router.get('/project/:id/plot', (req, res) => {
+    Project.findOne({ id: req.params.id }, (err, project) => {
         if (err) res.send(err);
 
-        gitInfo.getCommitInfo("C:/Users/jrobs/Documents/Projects/pomodoro/.git").then((array) => {
-            response.data = array;
-            res.json(response);
-        });
+        plotly.plotCommitFrequency(project.path);
+        res.json({ message: 'Ready for it!' });
     });
-    // Project.findOneAndUpdate({ id: req.params.id }, { commits: 1989 }, (err, project) => {
-    //     if (err) res.send(err);
+});
 
-    //     res.json({ message: "Project updated!" });
-    // });
+// Editing
+router.put('/project/:id', (req, res) => {
+    Project.findOneAndUpdate({ id: req.params.id }, { commits: 1989 }, (err, project) => {
+        if (err) res.send(err);
+
+        res.json({ message: "Project updated!" });
+    });
 });
 
 router.delete('/projects', (req, res) => {
