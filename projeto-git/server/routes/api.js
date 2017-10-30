@@ -2,24 +2,16 @@ const express = require('express');
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
-let gitInfo = require('./../git-info');
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
+
+let gitInfo = require('./../util/git-info');
 let Project = require('./../models/project');
-let plotly = require('./../plotly');
+let plotly = require('./../util/plotly');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/git-projects', {
     useMongoClient: true,
 });
-
-const connection = (closure) => {
-    return mongoose.connect('mongodb://localhost:27017/git-projects', {
-        useMongoClient: true,
-    }, (err, db) => {
-        if (err) return console.log(err);
-        closure(db);
-    });
-};
 
 const sendError = (err, res) => {
     response.status = 501;
@@ -67,6 +59,7 @@ router.get('/project/:id', (req, res) => {
     });
 });
 
+// Plot commit X time
 router.get('/project/:id/plot', (req, res) => {
     Project.findOne({ id: req.params.id }, (err, project) => {
         if (err) res.send(err);
@@ -85,11 +78,12 @@ router.put('/project/:id', (req, res) => {
     });
 });
 
+// Erase all data
 router.delete('/projects', (req, res) => {
     Project.remove({}, (err) => {
         if (err) res.send(err);
 
-        res.json({ message: 'Successfully deleted' });
+        res.json({ message: 'Successfully deleted all data.' });
     });
 });
 

@@ -1,5 +1,5 @@
 let NodeGit = require("nodegit");
-let Project = require('./models/project');
+let Project = require('./../models/project');
 
 module.exports = {
     getCommitNumber(project) {
