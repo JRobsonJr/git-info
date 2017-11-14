@@ -1,3 +1,4 @@
+import { DataVisualizationModule } from './data-visualization/data-visualization.module';
 import { ProjectDataService } from './project/project-data.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -18,14 +19,15 @@ import { ProjectNotFoundComponent } from './project-not-found/project-not-found.
     HomeComponent,
     ProjectListComponent,
     ProjectDetailComponent,
-    ProjectNotFoundComponent
+    ProjectNotFoundComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    DataVisualizationModule
   ],
   providers: [ProjectDataService],
   bootstrap: [AppComponent]
