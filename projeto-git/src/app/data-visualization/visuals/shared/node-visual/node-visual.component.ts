@@ -1,19 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
-
-import { Node } from './../../../data-visualization/d3/models/node';
+import { Component, Input } from '@angular/core';
+import { Node } from '../../../d3';
 
 @Component({
-  selector: 'nodeVisual',
+  selector: '[nodeVisual]',
   templateUrl: './node-visual.component.html',
   styleUrls: ['./node-visual.component.css']
 })
-export class NodeVisualComponent implements OnInit {
 
+export class NodeVisualComponent {
   @Input('nodeVisual') node: Node;
-  
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }

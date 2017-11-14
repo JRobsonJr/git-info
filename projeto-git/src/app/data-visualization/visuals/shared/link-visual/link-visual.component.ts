@@ -1,18 +1,11 @@
-import { Link } from './../../../data-visualization/d3/models/link';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Link } from '../../../d3';
 
 @Component({
-  selector: 'linkVisual',
+  selector: '[linkVisual]',
   templateUrl: './link-visual.component.html',
   styleUrls: ['./link-visual.component.css']
 })
-export class LinkVisualComponent implements OnInit {
-  
+export class LinkVisualComponent  {
   @Input('linkVisual') link: Link;
-  
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }

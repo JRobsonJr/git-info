@@ -1,6 +1,4 @@
-// path : d3/models/node.ts
-// Implementing SimulationNodeDatum interface into our custom Node class
-import APP_CONFIG from './../../test.config';
+import APP_CONFIG from '../../test.config';
 
 export class Node implements d3.SimulationNodeDatum {
   // optional - defining optional implementation properties - required for relevant typing assistance
@@ -34,4 +32,5 @@ export class Node implements d3.SimulationNodeDatum {
   get color() {
     let index = Math.floor(APP_CONFIG.SPECTRUM.length * this.normal());
     return APP_CONFIG.SPECTRUM[index];
-  }}
+  }
+}
