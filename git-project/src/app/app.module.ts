@@ -12,6 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectDetailComponent } from './project-detail/project-detail.component';
 import { ProjectNotFoundComponent } from './project-not-found/project-not-found.component';
+import { ContributorDetailComponent } from './contributor-detail/contributor-detail.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ProjectNotFoundComponent } from './project-not-found/project-not-found.
     ProjectListComponent,
     ProjectDetailComponent,
     ProjectNotFoundComponent,
+    ContributorDetailComponent,
   ],
   imports: [
     BrowserModule,
