@@ -1,12 +1,13 @@
-import { Injectable, EventEmitter, OnInit } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Injectable, EventEmitter, OnInit } from "@angular/core";
+import { Http, Headers, RequestOptions } from "@angular/http";
 import 'rxjs/add/operator/map';
 
-import { Project } from './project.model';
+import { Project } from "./project.model";
+import { Commit, getCommits } from './../data-visualization/shared/commit-data';
 
 @Injectable()
 export class ProjectDataService implements OnInit {
-  private projects: Project[] = [];
+  private projects: Array<Project> = [];
   result: any;
 
   constructor(private http: Http) {
@@ -16,8 +17,9 @@ export class ProjectDataService implements OnInit {
   }
 
   getProjects() {
-    return this.http.get("/api/projects")
-      .map(result => { return this.result = result.json().data as Project[] });
+    return this.http
+      .get("/api/projects")
+      .map(result => (this.result = result.json().data as Array<Project>));
   }
 
   getProject(id: number) {
@@ -26,10 +28,18 @@ export class ProjectDataService implements OnInit {
         return project;
       }
     }
-    
+
     return null;
   }
 
-  ngOnInit() {
+  getCommits(id: number) {
+    return this.http.get("/api/project/" + id + "/commits").map(result => {
+      this.result = result.json().data;
+      let commitData: Array<Commit> = getCommits(this.result);
+      console.log(commitData);
+      return commitData;
+    });
   }
+
+  ngOnInit() {}
 }

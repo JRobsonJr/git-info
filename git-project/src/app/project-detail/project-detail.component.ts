@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { Project } from '../project/project.model';
 import { ProjectDataService } from './../project/project-data.service';
+import { Commit } from './../data-visualization/shared/commit-data';
 
 @Component({
   selector: 'app-project-detail',
@@ -15,12 +16,16 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   id: number;
   subscription: Subscription;
   project: Project;
+  commits: Array<Commit>;
 
   constructor(private route: ActivatedRoute, private router: Router, private projectService: ProjectDataService) {
     this.subscription = this.route.params.subscribe(
       (params: any) => {
         this.id = params['id'];
         this.project = this.projectService.getProject(this.id);
+        this.projectService.getCommits(this.id).subscribe(resp => {
+          this.commits = resp;
+        });
 
         if (this.project == null) {
           this.router.navigate(['/notFound']);

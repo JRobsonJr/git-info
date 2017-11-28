@@ -33,7 +33,7 @@ router.get("/projects", (req, res) => {
   });
 });
 
-router.post("/projects", function(req, res) {
+router.post("/projects", (req, res) => {
   let project = new Project();
 
   project.name = req.body.name;
@@ -46,14 +46,18 @@ router.post("/projects", function(req, res) {
       project.save(err => {
         if (err) res.send(err);
 
-        res.json({ message: "Project created!" });
+        res.json({
+          message: "Project created!"
+        });
       });
     })
     .catch(err => console.log(err));
 });
 
 router.get("/project/:id", (req, res) => {
-  Project.findOne({ id: req.params.id }, (err, project) => {
+  Project.findOne({
+    id: req.params.id
+  }, (err, project) => {
     if (err) res.send(err);
 
     response.data = project;
@@ -61,8 +65,22 @@ router.get("/project/:id", (req, res) => {
   });
 });
 
+router.get("/project/:id/commits", (req, res) =>{
+  Project.findOne({
+    id: req.params.id
+  }, (err, project) => {
+    if (err) res.send(err);
+    gitInfo.getModifications(project.path).then(modificationsArray => {
+    response.data = modificationsArray;
+    res.json(response);
+    });
+  });
+});
+
 router.get("/project/:id/contributors", (req, res) => {
-  Project.findOne({ id: req.params.id }, (err, project) => {
+  Project.findOne({
+    id: req.params.id
+  }, (err, project) => {
     if (err) res.send(err);
     gitInfo.getContributors(project.path).then(contributorsArray => {
       response.data = contributorsArray;
@@ -72,7 +90,9 @@ router.get("/project/:id/contributors", (req, res) => {
 });
 
 router.get("/project/:id/contributor/:email", (req, res) => {
-  Project.findOne({ id: req.params.id }, (err, project) => {
+  Project.findOne({
+    id: req.params.id
+  }, (err, project) => {
     if (err) res.send(err);
     gitInfo.getModificationsByContributor(project.path, req.params.email).then(modificationsArray => {
       response.data = modificationsArray;
@@ -81,25 +101,19 @@ router.get("/project/:id/contributor/:email", (req, res) => {
   });
 });
 
-// Plot commit X time
-router.get("/project/:id/plot", (req, res) => {
-  Project.findOne({ id: req.params.id }, (err, project) => {
-    if (err) res.send(err);
-
-    plotly.plotCommitFrequency(project.path);
-    res.json({ message: "Ready for it!" });
-  });
-});
-
 // Editing
 router.put("/project/:id", (req, res) => {
-  Project.findOneAndUpdate(
-    { id: req.params.id },
-    { commits: 1989 },
+  Project.findOneAndUpdate({
+      id: req.params.id
+    }, {
+      commits: 1989
+    },
     (err, project) => {
       if (err) res.send(err);
 
-      res.json({ message: "Project updated!" });
+      res.json({
+        message: "Project updated!"
+      });
     }
   );
 });
@@ -109,7 +123,9 @@ router.delete("/projects", (req, res) => {
   Project.remove({}, err => {
     if (err) res.send(err);
 
-    res.json({ message: "Successfully deleted all data." });
+    res.json({
+      message: "Successfully deleted all data."
+    });
   });
 });
 

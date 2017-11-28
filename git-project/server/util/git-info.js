@@ -47,6 +47,24 @@ module.exports = {
       .catch(err => console.log(err));
   },
 
+  getModifications(projectPath) {
+    let modifications = [];
+
+        return this.getCommitArray(projectPath)
+          .then(async commitArray => {
+            for (commit of commitArray) {
+              let diffInfo = await this.getDiffInfo(commit);
+              modifications.push({
+                info: diffInfo,
+                message: commit.message(),
+                date: commit.date()
+              });
+            }
+            return this.sortCommitsByDate(modifications);
+          })
+          .catch(err => console.log(err));
+  },
+
   getModificationsByContributor(projectPath, contributorEmail) {
     let modifications = [];
 
@@ -54,10 +72,15 @@ module.exports = {
       .then(async commitArray => {
         for (commit of commitArray) {
           let diffInfo = await this.getDiffInfo(commit);
-          modifications.push({ info: diffInfo, date: commit.date() });
+          modifications.push({
+            info: diffInfo,
+            message: commit.message(),
+            date: commit.date()
+          });
         }
         return this.sortCommitsByDate(modifications);
-      }).catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
   },
 
   getCommitsByContributor(projectPath, contributorEmail) {
@@ -72,7 +95,7 @@ module.exports = {
         }
         return commits;
       })
-      .catch(err => console.log(err));
+      .catch(error => console.log(error));
   },
 
   async getDiffInfo(commit) {
@@ -82,20 +105,32 @@ module.exports = {
     for (diff of diffList) {
       const patches = await diff.patches();
       patches.forEach(patch => {
-        diffInfo.push(this.checkPatchType(patch));
-      })
+        let patchType = this.checkPatchType(patch);
+        if (diffInfo.indexOf(patchType) === -1) diffInfo.push(patchType);
+      });
     }
 
-    return diffInfo;
+    return diffInfo.filter((element, index) => {
+		  return diffInfo.indexOf(element) == index;
+	});
   },
 
   checkPatchType(patch) {
     if (patch.isAdded()) {
-      return ("ADDED: " + patch.newFile().path());
+      return {
+        type: "ADDED",
+        path: patch.newFile().path()
+      };
     } else if (patch.isModified()) {
-      return ("MODIFIED: " + patch.newFile().path());
+      return {
+        type: "MODIFIED",
+        path: patch.newFile().path()
+      };
     } else {
-      return ("EOQ");
+      return {
+        type: "?????",
+        path: patch.newFile().path()
+      };
     }
   },
 

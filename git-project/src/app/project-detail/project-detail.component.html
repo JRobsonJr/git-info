@@ -1,5 +1,16 @@
 <div class="container" *ngIf="project != null">
-    <h5>Detalhes de {{ project.name }}:</h5>
-    <p>Id = {{ project.id }}</p>
-    <p>Commits = {{ project.commits }}</p>
+  <h5>Details of {{ project.name }}:</h5>
+  <p>No. of commits: {{ project.commits }}</p>
+  <p>Commit list:</p>
+  <div>
+    <div class="list-group">
+      <a class="list-group-item list-group-item-action" *ngFor="let commit of commits">
+        <h6>{{ commit.date | date }}</h6>
+        <p><b>Message: </b>"{{ commit.message.trim() }}"</p>
+        <p><b>Modifications:</b></p>
+        <div *ngFor="let modification of commit.modifications">
+          <b>{{ modification.type }}:</b> {{ modification.path }}</div>
+      </a>
+    </div>
+  </div>
 </div>
