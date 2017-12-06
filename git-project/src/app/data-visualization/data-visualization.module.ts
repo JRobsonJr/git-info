@@ -11,8 +11,6 @@ import { DataVisualizationRoutingModule } from './data-visualization-routing.mod
 import { LinkVisualComponent } from './visuals/shared/link-visual/link-visual.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
 import { TestExample2Component } from './test-example-2/test-example-2.component';
-import { TestExample3Component } from './test-example-3/test-example-3.component';
-import { LineChartComponent } from './line-chart/line-chart.component';
 
 @NgModule({
   imports: [
@@ -27,9 +25,7 @@ import { LineChartComponent } from './line-chart/line-chart.component';
     LinkVisualComponent,
     NodeVisualComponent,
     BarChartComponent,
-    TestExample2Component,
-    TestExample3Component,
-    LineChartComponent
+    TestExample2Component
   ],
   providers: [D3Service]
 })

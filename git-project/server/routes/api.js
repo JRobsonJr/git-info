@@ -27,10 +27,9 @@ let response = {
 router.get("/projects", (req, res) => {
   Project.find((err, projects) => {
     if (err) res.send(err);
-
     response.data = projects;
     res.json(response);
-  });
+  }).catch(err => console.log(err));
 });
 
 router.post("/projects", (req, res) => {
@@ -40,72 +39,82 @@ router.post("/projects", (req, res) => {
   project.id = req.body.id;
   project.path = req.body.path;
 
-  gitInfo
-    .addCommitInfo(project)
-    .then(() => {
-      project.save(err => {
-        if (err) res.send(err);
-
-        res.json({
-          message: "Project created!"
-        });
-      });
+  project
+    .save(err => {
+      if (err) res.send(err);
+      response.message = "Project successfully created!";
+      res.json(response);
     })
     .catch(err => console.log(err));
 });
 
 router.get("/project/:id", (req, res) => {
-  Project.findOne({
-    id: req.params.id
-  }, (err, project) => {
+  Project.findOne({ id: req.params.id }, (err, project) => {
     if (err) res.send(err);
-
     response.data = project;
     res.json(response);
   });
 });
 
-router.get("/project/:id/commits", (req, res) =>{
-  Project.findOne({
-    id: req.params.id
-  }, (err, project) => {
+router.get("/project/:id/commits", (req, res) => {
+  Project.findOne({ id: req.params.id }, (err, project) => {
     if (err) res.send(err);
-    gitInfo.getModifications(project.path).then(modificationsArray => {
-    response.data = modificationsArray;
-    res.json(response);
+    gitInfo.getCommits(project.path).then(commitArray => {
+      response.data = commitArray;
+      res.json(response);
+    });
+  });
+});
+
+router.get("/project/:id/commit-frequency", (req, res) => {
+  Project.findOne({ id: req.params.id }, (err, project) => {
+    if (err) res.send(err);
+    gitInfo.getCommitFrequency(project.path).then(frequencyArray => {
+      response.data = frequencyArray;
+      res.json(response);
     });
   });
 });
 
 router.get("/project/:id/contributors", (req, res) => {
-  Project.findOne({
-    id: req.params.id
-  }, (err, project) => {
-    if (err) res.send(err);
-    gitInfo.getContributors(project.path).then(contributorsArray => {
-      response.data = contributorsArray;
-      res.json(response);
-    });
-  });
+  Project.findOne(
+    {
+      id: req.params.id
+    },
+    (err, project) => {
+      if (err) res.send(err);
+      gitInfo.getContributors(project.path).then(contributorsArray => {
+        response.data = contributorsArray;
+        res.json(response);
+      });
+    }
+  );
 });
 
 router.get("/project/:id/contributor/:email", (req, res) => {
-  Project.findOne({
-    id: req.params.id
-  }, (err, project) => {
-    if (err) res.send(err);
-    gitInfo.getModificationsByContributor(project.path, req.params.email).then(modificationsArray => {
-      response.data = modificationsArray;
-      res.json(response);
-    });
-  });
+  Project.findOne(
+    {
+      id: req.params.id
+    },
+    (err, project) => {
+      if (err) res.send(err);
+      gitInfo
+        .getCommitsByContributor(project.path, req.params.email)
+        .then(modificationsArray => {
+          response.data = modificationsArray;
+          res.json(response);
+        });
+    }
+  );
 });
 
 // Editing
 router.put("/project/:id", (req, res) => {
-  Project.findOneAndUpdate({
+  Project.findOneAndUpdate(
+    {
       id: req.params.id
-    }, {
+    },
+    {
       commits: 1989
     },
     (err, project) => {

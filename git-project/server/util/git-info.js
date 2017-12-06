@@ -1,23 +1,10 @@
 let NodeGit = require("nodegit");
 let Project = require("./../models/project");
+let _ = require("underscore");
+let moment = require("moment");
 
 module.exports = {
-  getCommitNumber(project) {
-    let path = require("path").resolve(project.path);
-    return NodeGit.Repository.open(path).then(repo => {
-      let walker = repo.createRevWalk(String);
-      walker.pushGlob("refs/heads/*");
-      return walker
-        .getCommitsUntil(c => true)
-        .then(array => {
-          project.commits = array.length;
-          project.commitArray = array;
-        })
-        .catch(err => console.log(err));
-    });
-  },
-
-  getCommitArray(projectPath) {
+  getRawCommitArray(projectPath) {
     let path = require("path").resolve(projectPath);
     return NodeGit.Repository.open(path).then(repo => {
       let walker = repo.createRevWalk(String);
@@ -35,11 +22,12 @@ module.exports = {
   getContributors(projectPath) {
     let contributors = [];
 
-    return this.getCommitArray(projectPath)
+    return this.getCommits(projectPath)
       .then(commitArray => {
         for (let commit of commitArray) {
-          if (contributors.indexOf(commit.author().email()) === -1) {
-            contributors.push(commit.author().email());
+          let author = commit.author;
+          if (!this.containsContributor(contributors, author.email)) {
+            contributors.push(author);
           }
         }
         return contributors;
@@ -47,55 +35,84 @@ module.exports = {
       .catch(err => console.log(err));
   },
 
-  getModifications(projectPath) {
-    let modifications = [];
-
-        return this.getCommitArray(projectPath)
-          .then(async commitArray => {
-            for (commit of commitArray) {
-              let diffInfo = await this.getDiffInfo(commit);
-              modifications.push({
-                info: diffInfo,
-                message: commit.message(),
-                date: commit.date()
-              });
-            }
-            return this.sortCommitsByDate(modifications);
-          })
-          .catch(err => console.log(err));
+  containsContributor(contributors, contributorEmail) {
+    for (contributor of contributors) {
+      if (contributor.email === contributorEmail) {
+        return true;
+      }
+    }
+    return false;
   },
 
-  getModificationsByContributor(projectPath, contributorEmail) {
-    let modifications = [];
+  getCommits(projectPath) {
+    let commits = [];
 
-    return this.getCommitsByContributor(projectPath, contributorEmail)
+    return this.getRawCommitArray(projectPath)
       .then(async commitArray => {
         for (commit of commitArray) {
           let diffInfo = await this.getDiffInfo(commit);
-          modifications.push({
-            info: diffInfo,
+          commits.push({
+            author: {
+              name: commit.author().name(),
+              email: commit.author().email()
+            },
+            modifications: diffInfo,
             message: commit.message(),
             date: commit.date()
           });
         }
-        return this.sortCommitsByDate(modifications);
+        return this.sortCommitsByDate(commits);
       })
       .catch(err => console.log(err));
   },
 
-  getCommitsByContributor(projectPath, contributorEmail) {
-    let commits = [];
+  getCommitFrequency(path) {
+    return this.getCommits(path).then(commitArray => {
+      let dateArray = [];
 
-    return this.getCommitArray(projectPath)
-      .then(commitArray => {
-        for (commit of commitArray) {
-          if (this.isCommitByContributor(commit, contributorEmail)) {
-            commits.push(commit);
-          }
-        }
-        return commits;
+      for (let commit of commitArray) {
+        dateArray.push(commit.date);
+      }
+
+      let occurrenceDay = occurrence => {
+        return moment(occurrence)
+          .startOf("day")
+          .format();
+      };
+
+      let groupToDay = (group, day) => {
+        return {
+          day: day,
+          times: group
+        };
+      };
+
+      let result = _.chain(dateArray)
+        .groupBy(occurrenceDay)
+        .map(groupToDay)
+        .sortBy("day")
+        .value();
+
+      let array = [];
+
+      for (data of result) {
+        array.push({ date: data.day.slice(0, 10), value: data.times.length });
+      }
+
+      return array;
+    });
+  },
+
+  getCommitsByContributor(projectPath, contributorEmail) {
+    let contributorCommits = [];
+
+    return this.getCommits(projectPath)
+      .then(commits => {
+        return commits.filter(
+          commit => commit.author.email == contributorEmail
+        );
       })
-      .catch(error => console.log(error));
+      .catch(err => console.log(err));
   },
 
   async getDiffInfo(commit) {
@@ -111,27 +128,21 @@ module.exports = {
     }
 
     return diffInfo.filter((element, index) => {
-		  return diffInfo.indexOf(element) == index;
-	});
+      return diffInfo.indexOf(element) == index;
+    });
   },
 
   checkPatchType(patch) {
-    if (patch.isAdded()) {
-      return {
-        type: "ADDED",
-        path: patch.newFile().path()
-      };
-    } else if (patch.isModified()) {
-      return {
-        type: "MODIFIED",
-        path: patch.newFile().path()
-      };
-    } else {
-      return {
-        type: "?????",
-        path: patch.newFile().path()
-      };
-    }
+    const patchTypes = ["OTHER", "ADDED", "DELETED", "MODIFIED"];
+
+    let status = patch.status();
+
+    if (status > 3) status = 0;
+
+    return {
+      type: patchTypes[status],
+      path: patch.newFile().path()
+    };
   },
 
   isCommitByContributor(commit, contributorEmail) {
@@ -140,7 +151,7 @@ module.exports = {
 
   sortCommitsByDate(commitArray) {
     return commitArray.sort((a, b) => {
-      return a["date"] < b["date"] ? -1 : 1;
+      return a.date < b.date ? -1 : 1;
     });
-  },
+  }
 };

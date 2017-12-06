@@ -1,18 +1,18 @@
-import { JsonObject } from "@angular-devkit/core/src";
-
 export class Commit {
+  author: Author;
   date: Date;
   message: string;
   modifications: Array<Modification>;
 }
 
+export class Author {
+  name: string;
+  email: string;
+}
+
 export class Modification {
   type: string;
   path: string;
-
-  toString() {
-    return this.type + ": " + this.path;
-  }
 }
 
 export function getCommits(commitJson) {
@@ -30,9 +30,10 @@ export function convertToCommitObject(commitJson) {
   let commit: Commit = new Commit();
   commit.date = commitJson.date;
   commit.message = commitJson.message;
+  commit.author = commitJson.author as Author;
   let modifications: Array<Modification> = [];
 
-  for (let modificationJson of commitJson.info) {
+  for (let modificationJson of commitJson.modifications) {
     let modificationObject: Modification = modificationJson as Modification;
     modifications.push(modificationObject);
   }

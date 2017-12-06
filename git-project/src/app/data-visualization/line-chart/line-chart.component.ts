@@ -1,12 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { ProjectDataService } from "./../../project/project-data.service";
+import { Component, Input, OnInit } from "@angular/core";
 
 import * as d3 from "d3";
 import * as d3Scale from "d3-scale";
 import * as d3Shape from "d3-shape";
 import * as d3Array from "d3-array";
 import * as d3Axis from "d3-axis";
-
-// import { Stocks } from "./data";
 
 @Component({
   selector: "app-line-chart",
@@ -21,17 +20,22 @@ export class LineChartComponent implements OnInit {
   private y: any;
   private svg: any;
   private line: d3Shape.Line<[number, number]>;
+  @Input() private projectId: number;
+  private commitFrequency: Array<any>;
 
-  constructor() {
+  constructor(private projectService: ProjectDataService) {
     this.width = 900 - this.margin.left - this.margin.right;
     this.height = 500 - this.margin.top - this.margin.bottom;
   }
 
   ngOnInit() {
-    this.initSvg();
-    this.initAxis();
-    this.drawAxis();
-    this.drawLine();
+    this.projectService.getCommitFrequency(this.projectId).subscribe(resp => {
+      this.commitFrequency = resp;
+      this.initSvg();
+      this.initAxis();
+      this.drawAxis();
+      this.drawLine();
+    });
   }
 
   private initSvg() {
@@ -47,8 +51,9 @@ export class LineChartComponent implements OnInit {
   private initAxis() {
     this.x = d3Scale.scaleTime().range([0, this.width]);
     this.y = d3Scale.scaleLinear().range([this.height, 0]);
-   // this.x.domain(d3Array.extent(Stocks, d => d.date));
-   // this.y.domain(d3Array.extent(Stocks, d => d.value));
+    console.log(this.commitFrequency);
+    this.x.domain(d3Array.extent(this.commitFrequency, d => d.date));
+    this.y.domain(d3Array.extent(this.commitFrequency, d => d.value));
   }
 
   private drawAxis() {
@@ -67,19 +72,21 @@ export class LineChartComponent implements OnInit {
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Price ($)");
+      .style("text-anchor", "end");
   }
 
   private drawLine() {
+    let parseTime = d3.timeParse("%Y-%m-%d");
+
     this.line = d3Shape
       .line()
       .x((d: any) => this.x(d.date))
       .y((d: any) => this.y(d.value));
 
+      console.log(this.commitFrequency);
     this.svg
       .append("path")
-     // .datum(Stocks)
+      .datum(this.commitFrequency)
       .attr("class", "line")
       .attr("d", this.line);
   }

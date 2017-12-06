@@ -1,18 +1,18 @@
+import { Author } from './../shared/commit-data';
+
 export class Project {
   name: string;
-  url: string;
+  path: string;
   commits: number;
   id: number;
+  contributors: Array<Author>;
+  commitFrequency: Array<any>;
 
-  constructor(name?: string, url?: string, id?: number) {
+  constructor(name?: string, path?: string, id?: number) {
     this.name = name;
-    this.url = url;
+    this.path = path;
     this.id = id;
+    this.contributors = new Array<Author>();
+    this.commitFrequency = new Array<any>();
   }
-
-  toString() {
-    return this.name + ' available at: ' + this.url + '. It has been commited ' + this.commits + ' times by now.';
-  }
-
-  // ngOnInit() {}
 }

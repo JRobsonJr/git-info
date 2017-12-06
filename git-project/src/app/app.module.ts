@@ -1,3 +1,4 @@
+import { LineChartComponent } from './data-visualization/line-chart/line-chart.component';
 import { DataVisualizationModule } from './data-visualization/data-visualization.module';
 import { ProjectDataService } from './project/project-data.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -22,6 +23,7 @@ import { ContributorDetailComponent } from './contributor-detail/contributor-det
     ProjectDetailComponent,
     ProjectNotFoundComponent,
     ContributorDetailComponent,
+    LineChartComponent
   ],
   imports: [
     BrowserModule,

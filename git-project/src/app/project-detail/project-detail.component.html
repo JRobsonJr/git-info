@@ -1,15 +1,35 @@
-<div class="container" *ngIf="project != null">
-  <h5>Details of {{ project.name }}:</h5>
+<div class="container" *ngIf="project">
+  <h3 class="text-center">Details of {{ project.name }}:</h3>
+  <br>
   <p>No. of commits: {{ project.commits }}</p>
-  <p>Commit list:</p>
-  <div>
-    <div class="list-group">
+  <p *ngIf="project.commits === 0">No commit data available.</p>
+  <div *ngIf="project.commits > 0">
+    <h4>Commit frequency:</h4>
+    <app-line-chart [projectId]="project.id"></app-line-chart>
+    <h4>Contributors:</h4>
+    <div class="container" class="list-group">
+      <a class="list-group-item list-group-item-action" *ngFor="let contributor of project.contributors">
+        {{ contributor.name }}
+        <{{ contributor.email }}>
+      </a>
+    </div>
+    <br>
+    <h4>Commit list:</h4>
+    <div class="container" class="list-group">
       <a class="list-group-item list-group-item-action" *ngFor="let commit of commits">
-        <h6>{{ commit.date | date }}</h6>
-        <p><b>Message: </b>"{{ commit.message.trim() }}"</p>
-        <p><b>Modifications:</b></p>
-        <div *ngFor="let modification of commit.modifications">
-          <b>{{ modification.type }}:</b> {{ modification.path }}</div>
+        <h5>{{ commit.date | date:'medium' }}</h5>
+        <p>
+          <b>Message: </b>"{{ commit.message.trim() }}"</p>
+        <p>
+          <b>Author: </b>{{ commit.author.name }}
+          <{{ commit.author.email }}>
+        </p>
+        <p>
+          <p>
+            <b>Modifications:</b>
+          </p>
+          <div *ngFor="let modification of commit.modifications">
+            <b>{{ modification.type }}:</b> {{ modification.path }}</div>
       </a>
     </div>
   </div>

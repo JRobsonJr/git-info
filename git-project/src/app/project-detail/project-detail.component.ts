@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { Project } from '../project/project.model';
 import { ProjectDataService } from './../project/project-data.service';
-import { Commit } from './../data-visualization/shared/commit-data';
+import { Commit } from './../shared/commit-data';
 
 @Component({
   selector: 'app-project-detail',
@@ -26,12 +26,22 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
         this.projectService.getCommits(this.id).subscribe(resp => {
           this.commits = resp;
         });
+        this.projectService.getContributors(this.id).subscribe(resp => {
+          this.project.contributors = resp;
+        });
 
         if (this.project == null) {
           this.router.navigate(['/notFound']);
         }
       }
     );
+  }
+
+  getCommitFrequency(): any {
+    this.projectService.getCommitFrequency(this.id).subscribe(resp => {
+      this.project.commitFrequency = resp;
+      return resp;
+    });
   }
 
   ngOnInit() {
