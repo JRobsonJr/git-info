@@ -51,7 +51,6 @@ export class LineChartComponent implements OnInit {
   private initAxis() {
     this.x = d3Scale.scaleTime().range([0, this.width]);
     this.y = d3Scale.scaleLinear().range([this.height, 0]);
-    console.log(this.commitFrequency);
     this.x.domain(d3Array.extent(this.commitFrequency, d => d.date));
     this.y.domain(d3Array.extent(this.commitFrequency, d => d.value));
   }
@@ -76,18 +75,20 @@ export class LineChartComponent implements OnInit {
   }
 
   private drawLine() {
-    let parseTime = d3.timeParse("%Y-%m-%d");
-
     this.line = d3Shape
       .line()
       .x((d: any) => this.x(d.date))
       .y((d: any) => this.y(d.value));
 
-      console.log(this.commitFrequency);
     this.svg
       .append("path")
       .datum(this.commitFrequency)
       .attr("class", "line")
-      .attr("d", this.line);
+      .attr("d", this.line)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 1.5);
   }
 }

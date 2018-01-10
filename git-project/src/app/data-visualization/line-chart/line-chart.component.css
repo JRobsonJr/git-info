@@ -1,20 +1,3 @@
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-}
-
-.axis-title {
-  fill: none;
-  stroke: black;
-  stroke-width: 0.5px;
-}
-
-
-.axis--x path {
-  /*display: none;*/
-}
-
 .line {
   fill: none;
   stroke: steelblue;

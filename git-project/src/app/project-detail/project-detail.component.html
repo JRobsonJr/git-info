@@ -8,7 +8,7 @@
     <app-line-chart [projectId]="project.id"></app-line-chart>
     <h4>Contributors:</h4>
     <div class="container" class="list-group">
-      <a class="list-group-item list-group-item-action" *ngFor="let contributor of project.contributors">
+      <a class="list-group-item list-group-item-action" *ngFor="let contributor of project.contributors" [routerLink]="['contributor', contributor.email]">
         {{ contributor.name }}
         <{{ contributor.email }}>
       </a>

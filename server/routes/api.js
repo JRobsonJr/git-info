@@ -8,9 +8,7 @@ let gitInfo = require("./../util/git-info");
 let Project = require("./../models/project");
 
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost:27017/git-projects", {
-  useMongoClient: true
-});
+mongoose.connect('mongodb://testuser:password@ds249757.mlab.com:49757/git_projects');
 
 const sendError = (err, res) => {
   response.status = 501;
@@ -93,15 +91,13 @@ router.get("/project/:id/contributors", (req, res) => {
 
 router.get("/project/:id/contributor/:email", (req, res) => {
   Project.findOne(
-    {
-      id: req.params.id
-    },
+    { id: req.params.id },
     (err, project) => {
       if (err) res.send(err);
       gitInfo
-        .getCommitsByContributor(project.path, req.params.email)
-        .then(modificationsArray => {
-          response.data = modificationsArray;
+        .getContributor(project.path, req.params.email)
+        .then(contributor => {
+          response.data = contributor;
           res.json(response);
         });
     }

@@ -48,6 +48,17 @@ export class ProjectDataService implements OnInit {
     });
   }
 
+  getContributor(projectId: number, contributorEmail: string) {
+    return this.http.get("/api/project/" + projectId + "/contributor/" + contributorEmail).map(result => {
+      this.result = result.json().data;
+      let contributor: Author = new Author();
+      contributor.name = this.result.name;
+      contributor.email = this.result.email;
+      contributor.modifications = getCommits(this.result.modifications);
+      return contributor;
+    });
+  }
+
   getCommitFrequency(id: number) {
     return this.http
       .get("/api/project/" + id + "/commit-frequency")

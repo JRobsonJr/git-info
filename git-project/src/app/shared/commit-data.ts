@@ -8,6 +8,7 @@ export class Commit {
 export class Author {
   name: string;
   email: string;
+  modifications: Array<Commit>;
 }
 
 export class Modification {

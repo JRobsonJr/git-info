@@ -115,6 +115,19 @@ module.exports = {
       .catch(err => console.log(err));
   },
 
+  getContributor(projectPath, contributorEmail) {
+    return this.getCommitsByContributor(projectPath, contributorEmail)
+      .then(commits => {
+        let contributor = {
+          name: commits[0].author.name,
+          email: commits[0].author.email,
+          modifications: commits,
+        };
+        return contributor;
+      })
+      .catch(err => console.log(err));
+  },
+
   async getDiffInfo(commit) {
     let diffList = await commit.getDiff();
     let diffInfo = [];
@@ -123,6 +136,7 @@ module.exports = {
       const patches = await diff.patches();
       patches.forEach(patch => {
         let patchType = this.checkPatchType(patch);
+        console.log(patchType, patch.lineStats());
         if (diffInfo.indexOf(patchType) === -1) diffInfo.push(patchType);
       });
     }
