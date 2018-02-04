@@ -1,3 +1,4 @@
+import { Project } from './../project/project.model';
 export class Commit {
   author: Author;
   date: Date;
@@ -8,7 +9,7 @@ export class Commit {
 export class Author {
   name: string;
   email: string;
-  modifications: Array<Commit>;
+  commits: Array<Commit>;
 }
 
 export class Modification {
@@ -26,6 +27,16 @@ export function getCommits(commitJson) {
 
   return commitData;
 }
+
+export function convertToProjectObject(projectJson) {
+  let project: Project = new Project();
+  project.id = projectJson.id;
+  project.name = projectJson.name;
+  project.path = projectJson.path;
+
+  return project;
+}
+
 
 export function convertToCommitObject(commitJson) {
   let commit: Commit = new Commit();

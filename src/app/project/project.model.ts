@@ -1,9 +1,9 @@
-import { Author } from './../shared/commit-data';
+import { Author, Commit } from './../shared/commit-data';
 
 export class Project {
   name: string;
   path: string;
-  commits: number;
+  commits: Array<Commit>;
   id: number;
   contributors: Array<Author>;
   commitFrequency: Array<any>;
@@ -12,6 +12,7 @@ export class Project {
     this.name = name;
     this.path = path;
     this.id = id;
+    this.commits = new Array<Commit>();
     this.contributors = new Array<Author>();
     this.commitFrequency = new Array<any>();
   }

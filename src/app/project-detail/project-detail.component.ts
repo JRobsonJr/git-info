@@ -24,7 +24,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
         this.id = params['id'];
         this.project = this.projectService.getProject(this.id);
         this.projectService.getCommits(this.id).subscribe(resp => {
-          this.commits = resp;
+          this.project.commits = resp;
         });
         this.projectService.getContributors(this.id).subscribe(resp => {
           this.project.contributors = resp;

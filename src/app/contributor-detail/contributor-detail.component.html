@@ -1,11 +1,11 @@
 <div class="container">
   <h3 class="text-center">{{ contributor.name }}, {{ contributor.email }}</h3>
   <br>
-  <p *ngIf="contributor.modifications.length === 0">No commit data available.</p>
-  <div *ngIf="contributor.modifications.length > 0">
+  <p *ngIf="contributor.commits.length === 0">No commit data available.</p>
+  <div *ngIf="contributor.commits.length > 0">
     <h4>Commit list:</h4>
     <div class="container" class="list-group">
-      <a class="list-group-item list-group-item-action" *ngFor="let commit of contributor.modifications">
+      <a class="list-group-item list-group-item-action" *ngFor="let commit of contributor.commits">
         <h5>{{ commit.date | date:'medium' }}</h5>
         <p>
           <b>Message: </b>"{{ commit.message.trim() }}"</p>

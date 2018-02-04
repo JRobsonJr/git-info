@@ -1,14 +1,7 @@
 <div class="container" *ngIf="projects.length > 0">
   <div class="list-group">
-    <a class="list-group-item list-group-item-action"
-    *ngFor="let project of projects"
-    [routerLink]="['/project', project.id]">
+    <a class="list-group-item list-group-item-action" *ngFor="let project of projects" [routerLink]="['/project', project.id]">
       {{ project.name }}
     </a>
   </div>
-</div>
-
-<div class="jumbotron" *ngIf="projects.length == 0">
-  <h1 class="display-3">Well, well...</h1>
-  <p class="lead">There's currently no data available.</p>
 </div>

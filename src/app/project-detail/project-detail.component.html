@@ -1,9 +1,9 @@
 <div class="container" *ngIf="project">
   <h3 class="text-center">Details of {{ project.name }}:</h3>
   <br>
-  <p>No. of commits: {{ project.commits }}</p>
-  <p *ngIf="project.commits === 0">No commit data available.</p>
-  <div *ngIf="project.commits > 0">
+  <p>No. of commits: {{ project.commits.length }}</p>
+  <p *ngIf="project.commits.length === 0">No commit data available.</p>
+  <div *ngIf="project.commits.length > 0">
     <h4>Commit frequency:</h4>
     <app-line-chart [projectId]="project.id"></app-line-chart>
     <h4>Contributors:</h4>
@@ -16,7 +16,7 @@
     <br>
     <h4>Commit list:</h4>
     <div class="container" class="list-group">
-      <a class="list-group-item list-group-item-action" *ngFor="let commit of commits">
+      <a class="list-group-item list-group-item-action" *ngFor="let commit of project.commits">
         <h5>{{ commit.date | date:'medium' }}</h5>
         <p>
           <b>Message: </b>"{{ commit.message.trim() }}"</p>

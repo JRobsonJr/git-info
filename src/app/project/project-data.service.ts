@@ -25,6 +25,7 @@ export class ProjectDataService implements OnInit {
   getProject(id: number) {
     for (let project of this.projects) {
       if (project.id === id) {
+        project.commits = new Array<Commit>();
         return project;
       }
     }
@@ -49,14 +50,16 @@ export class ProjectDataService implements OnInit {
   }
 
   getContributor(projectId: number, contributorEmail: string) {
-    return this.http.get("/api/project/" + projectId + "/contributor/" + contributorEmail).map(result => {
-      this.result = result.json().data;
-      let contributor: Author = new Author();
-      contributor.name = this.result.name;
-      contributor.email = this.result.email;
-      contributor.modifications = getCommits(this.result.modifications);
-      return contributor;
-    });
+    return this.http
+      .get("/api/project/" + projectId + "/contributor/" + contributorEmail)
+      .map(result => {
+        this.result = result.json().data;
+        let contributor: Author = new Author();
+        contributor.name = this.result.name;
+        contributor.email = this.result.email;
+        contributor.commits = getCommits(this.result.commits);
+        return contributor;
+      });
   }
 
   getCommitFrequency(id: number) {
@@ -69,11 +72,10 @@ export class ProjectDataService implements OnInit {
         for (let data of this.result) {
           commitFrequency.push({
             date: new Date(data.date),
-            value: data.value
+            value: data.occurrences
           });
         }
 
-        console.log(commitFrequency);
         return commitFrequency;
       });
   }
